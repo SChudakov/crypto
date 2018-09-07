@@ -3,6 +3,7 @@ project(crypto)
 
 add_executable(arithmetic
         main.cpp
-        BigInteger.cpp
-        BigInteger.h
         )
+
+add_subdirectory(src)
+add_subdirectory(test)
