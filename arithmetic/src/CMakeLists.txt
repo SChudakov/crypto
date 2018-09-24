@@ -1,7 +1,12 @@
-cmake_minimum_required(VERSION 3.12)
-project(crypto)
+add_library(arithmetic "")
 
-add_executable(arithmetic_src
-        BigInteger.cpp
-        BigInteger.h
+target_sources(arithmetic
+        PRIVATE
+            BigInteger.cpp
+        PUBLIC
+            ${CMAKE_CURRENT_LIST_DIR}/BigInteger.h
+        )
+target_include_directories(arithmetic
+        PUBLIC
+            ${CMAKE_CURRENT_LIST_DIR}
         )
