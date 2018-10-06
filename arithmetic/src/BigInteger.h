@@ -23,12 +23,14 @@ class BigInteger {
 private:
     static const int BASE = 1000 * 1000 * 1000;
     static const BigInteger ZERO;
+    static const BigInteger ONE;
 
     vector<int> number;
     int signum;
 
     BigInteger();
 
+    BigInteger(const vector<int> &number, int signum);
 
     static int compare(const vector<int> &first, const vector<int> &second);
 
@@ -79,7 +81,15 @@ private:
     static vector<int> square_root_initial_approximation(vector<int> number);
 
     static vector<int>
-    square_root_next_approximation(const vector<int> &number, const vector<int> &approximation, const vector<int> two);
+    square_root_next_approximation(const vector<int> &number, const vector<int> &approximation, vector<int> two);
+
+
+    static void assert_pairwise_co_prime(const vector<pair<int, int>> &modulus_remainders);
+
+    static int gcd(int a, int b);
+
+
+    static BigInteger inverse(BigInteger a, BigInteger b);
 
 
     static void normalize(vector<int> &number);
@@ -90,8 +100,10 @@ private:
 
     static string to_string(int number);
 
+    static vector<int> to_vector(const string &s);
+
 public:
-    BigInteger(const vector<int> &number, int signum);
+    explicit BigInteger(const string &s);
 
 
     friend BigInteger operator+(const BigInteger &first, const BigInteger &second);
@@ -110,6 +122,7 @@ public:
     friend bool operator>(const BigInteger &left, const BigInteger &right);
 
     friend bool operator==(const BigInteger &left, const BigInteger &right);
+
 
     friend ostream &operator<<(ostream &os, const BigInteger &dt);
 
@@ -137,6 +150,8 @@ public:
     BigInteger negate() const;
 
     static BigInteger value_of(long long number);
+
+    static BigInteger chinese_remainder_problem(vector<pair<int, int>> &modulus_remainders);
 };
 
 

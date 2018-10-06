@@ -28,86 +28,37 @@ TEST(square_root, short_numbers) {
 }
 
 TEST(square_root, long_numbers_1) {
-    vector<int> number_vector;
-    number_vector.push_back(0);
-    number_vector.push_back(1);
-    BigInteger number = BigInteger(number_vector, 1);
+    BigInteger number = BigInteger("1000000000");
     BigInteger square_root = BigInteger::value_of(31622);
-
     ASSERT_EQ(number.square_root(), square_root);
 }
 
 TEST(square_root, long_numbers_2) {
-    vector<int> number_vector;
-    number_vector.push_back(0);
-    number_vector.push_back(10);
-    BigInteger number = BigInteger(number_vector, 1);
+    BigInteger number = BigInteger("10000000000");
     BigInteger square_root = BigInteger::value_of(100000);
-
     ASSERT_EQ(number.square_root(), square_root);
 }
 
 TEST(square_root, long_numbers_3) {
-    vector<int> number_vector;
-    number_vector.push_back(913481346);
-    number_vector.push_back(193484361);
-    number_vector.push_back(92763);
-    BigInteger number = BigInteger(number_vector, 1);
-
-    vector<int> square_root_vector;
-    square_root_vector.push_back(570506589);
-    square_root_vector.push_back(304);
-    BigInteger square_root = BigInteger(square_root_vector, 1);
-
+    BigInteger number = BigInteger("92763193484361913481346");
+    BigInteger square_root = BigInteger("304570506589");
     ASSERT_EQ(number.square_root(), square_root);
 }
 
 TEST(square_root, long_numbers_4) {
-    vector<int> number_vector;
-    number_vector.push_back(658716457);
-    number_vector.push_back(847568147);
-    number_vector.push_back(1);
-    BigInteger number = BigInteger(number_vector, 1);
-
-    vector<int> square_root_vector;
-    square_root_vector.push_back(359252790);
-    square_root_vector.push_back(1);
-    BigInteger square_root = BigInteger(square_root_vector, 1);
-
+    BigInteger number = BigInteger("1847568147658716457");
+    BigInteger square_root = BigInteger("1359252790");
     ASSERT_EQ(number.square_root(), square_root);
 }
 
 TEST(square_root, long_numbers_5) {
-    vector<int> number_vector;
-    number_vector.push_back(327506827);
-    number_vector.push_back(756720867);
-    number_vector.push_back(992586027);
-    number_vector.push_back(345720986);
-    number_vector.push_back(876527952);
-    number_vector.push_back(6572465);
-    BigInteger number = BigInteger(number_vector, 1);
-
-    vector<int> square_root_vector;
-    square_root_vector.push_back(829693569);
-    square_root_vector.push_back(120459211);
-    square_root_vector.push_back(81070746);
-    BigInteger square_root = BigInteger(square_root_vector, 1);
-
+    BigInteger number = BigInteger("6572465876527952345720986992586027756720867327506827");
+    BigInteger square_root = BigInteger("81070746120459211829693569");
     ASSERT_EQ(number.square_root(), square_root);
 }
 
 TEST(square_root, long_numbers_6) {
-    vector<int> number_vector;
-    number_vector.push_back(478165165);
-    number_vector.push_back(581658716);
-    number_vector.push_back(561874187);
-    number_vector.push_back(17);
-    BigInteger number = BigInteger(number_vector, 1);
-
-    vector<int> square_root_vector;
-    square_root_vector.push_back(221649898);
-    square_root_vector.push_back(132521);
-    BigInteger square_root = BigInteger(square_root_vector, 1);
-
+    BigInteger number = BigInteger("17561874187581658716478165165");
+    BigInteger square_root = BigInteger("132521221649898");
     ASSERT_EQ(number.square_root(), square_root);
 }

@@ -29,51 +29,23 @@ TEST(modulo, short_numbers) {
 }
 
 TEST(modulo, long_numbers_1) {
-    vector<int> first_divident_vector;
-    first_divident_vector.push_back(987654321);
-    first_divident_vector.push_back(1234567);
-    BigInteger divident = BigInteger(first_divident_vector, 1);
-    vector<int> first_divisor_vector;
-    first_divisor_vector.push_back(122333456);
-    first_divisor_vector.push_back(12);
-    BigInteger modulo_base = BigInteger(first_divisor_vector, 1);
+    BigInteger divident = BigInteger("1234567987654321");
+    BigInteger modulo_base = BigInteger("12122333456");
     BigInteger modulo = BigInteger::value_of(5303828369);
-
     ASSERT_EQ(divident % modulo_base, modulo);
-
-
 }
 
 TEST(modulo, long_numbers_2) {
-    vector<int> divident_vector;
-    divident_vector.push_back(511627776);
-        divident_vector.push_back(1099);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(73741824);
-    divisor_vector.push_back(1);
-    BigInteger modulo_base = BigInteger(divisor_vector, 1);
-
+    BigInteger divident = BigInteger("1099511627776");
+    BigInteger modulo_base = BigInteger("1073741824");
     BigInteger modulo = BigInteger::value_of(0);
-
     ASSERT_EQ(divident % modulo_base, modulo);
 }
 
 TEST(modulo, long_numbers_3) {
-
-    vector<int> divident_vector;
-    divident_vector.push_back(0);
-    divident_vector.push_back(1000000);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(0);
-    divisor_vector.push_back(1);
-    BigInteger modulo_base = BigInteger(divisor_vector, 1);
-
+    BigInteger divident = BigInteger("1000000000000000");
+    BigInteger modulo_base = BigInteger("1000000000");
     BigInteger modulo = BigInteger::value_of(0);
-
     ASSERT_EQ(divident % modulo_base, modulo);
 }
 

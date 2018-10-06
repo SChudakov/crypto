@@ -41,128 +41,52 @@ TEST(division, short_numbers) {
 }
 
 TEST(division, long_numbers_1) {
-    vector<int> first_divident_vector;
-    first_divident_vector.push_back(987654321);
-    first_divident_vector.push_back(1234567);
-    BigInteger divident = BigInteger(first_divident_vector, 1);
-    vector<int> first_divisor_vector;
-    first_divisor_vector.push_back(122333456);
-    first_divisor_vector.push_back(12);
-    BigInteger divisor = BigInteger(first_divisor_vector, 1);
+    BigInteger divident = BigInteger("1234567987654321");
+    BigInteger divisor = BigInteger("12122333456");
     BigInteger quotient = BigInteger::value_of(101842);
-
     ASSERT_EQ(divident / divisor, quotient);
 }
 
 TEST(division, long_numbers_2) {
-    vector<int> divident_vector;
-    divident_vector.push_back(511627776);
-    divident_vector.push_back(1099);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(73741824);
-    divisor_vector.push_back(1);
-    BigInteger divisor = BigInteger(divisor_vector, 1);
-
+    BigInteger divident = BigInteger("1099511627776");
+    BigInteger divisor = BigInteger("1073741824");
     BigInteger quotient = BigInteger::value_of(1024);
-
     ASSERT_EQ(divident / divisor, quotient);
 }
 
 TEST(division, long_numbers_3) {
-
-    vector<int> divident_vector;
-    divident_vector.push_back(0);
-    divident_vector.push_back(1000000);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(0);
-    divisor_vector.push_back(1);
-    BigInteger divisor = BigInteger(divisor_vector, 1);
-
+    BigInteger divident = BigInteger("1000000000000000");
+    BigInteger divisor = BigInteger("1000000000");
     BigInteger quotient = BigInteger::value_of(1000000);
-
     ASSERT_EQ(divident / divisor, quotient);
 }
 
 TEST(division, long_numbers_4) {
-
-    vector<int> divident_vector;
-    divident_vector.push_back(193484361);
-    divident_vector.push_back(92763);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(0);
-    divisor_vector.push_back(200);
-    BigInteger divisor = BigInteger(divisor_vector, 1);
-
+    BigInteger divident = BigInteger("92763193484361");
+    BigInteger divisor = BigInteger("200000000000");
     BigInteger quotient = BigInteger::value_of(463);
-
     ASSERT_EQ(divident / divisor, quotient);
 }
 
 TEST(division, long_numbers_5) {
-
-    vector<int> divident_vector;
-    divident_vector.push_back(913481346);
-    divident_vector.push_back(193484361);
-    divident_vector.push_back(92763);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(0);
-    divisor_vector.push_back(200);
-    BigInteger divisor = BigInteger(divisor_vector, 1);
-
-    vector<int> quotient_vector;
-    quotient_vector.push_back(815967421);
-    quotient_vector.push_back(463);
-    BigInteger quotient = BigInteger(quotient_vector, 1);
+    BigInteger divident = BigInteger("92763193484361913481346");
+    BigInteger divisor = BigInteger("200000000000");
+    BigInteger quotient = BigInteger("463815967421");
     BigInteger tmp = divident / divisor;
     ASSERT_EQ(divident / divisor, quotient);
 }
 
 TEST(division, long_numbers_6) {
-
-    vector<int> divident_vector;
-    divident_vector.push_back(913481346);
-    divident_vector.push_back(193484361);
-    divident_vector.push_back(92763);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(907983710);
-    divisor_vector.push_back(331);
-    BigInteger divisor = BigInteger(divisor_vector, 1);
-
-    vector<int> quotient_vector;
-    quotient_vector.push_back(484670562);
-    quotient_vector.push_back(279);
-    BigInteger quotient = BigInteger(quotient_vector, 1);
+    BigInteger divident = BigInteger("92763193484361913481346");
+    BigInteger divisor = BigInteger("331907983710");
+    BigInteger quotient = BigInteger("279484670562");
     BigInteger tmp = divident / divisor;
     ASSERT_EQ(divident / divisor, quotient);
 }
 
 TEST(division, long_numbers_7) {
-
-    vector<int> divident_vector;
-    divident_vector.push_back(913481346);
-    divident_vector.push_back(193484361);
-    divident_vector.push_back(92763);
-    BigInteger divident = BigInteger(divident_vector, 1);
-
-    vector<int> divisor_vector;
-    divisor_vector.push_back(696327136);
-    divisor_vector.push_back(305);
-    BigInteger divisor = BigInteger(divisor_vector, 1);
-
-    vector<int> quotient_vector;
-    quotient_vector.push_back(448832223);
-    quotient_vector.push_back(303);
-    BigInteger quotient = BigInteger(quotient_vector, 1);
-    BigInteger tmp = divident / divisor;
+    BigInteger divident = BigInteger("92763193484361913481346");
+    BigInteger divisor = BigInteger("305696327136");
+    BigInteger quotient = BigInteger("303448832223");
     ASSERT_EQ(divident / divisor, quotient);
 }

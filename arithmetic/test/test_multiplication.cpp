@@ -48,54 +48,33 @@ TEST(multiplication, int_numbers) {
 
 TEST(multiplication, long_numbers_1) {
     BigInteger billion = BigInteger::value_of(1000000000l);
-    vector<int> billion_times_billion_vector;
-    billion_times_billion_vector.push_back(0);
-    billion_times_billion_vector.push_back(0);
-    billion_times_billion_vector.push_back(1);
-    BigInteger billion_times_billion(billion_times_billion_vector, 1);
+    BigInteger billion_times_billion("1000000000000000000");
     BigInteger expected_billion_times_billion = billion * billion;
     ASSERT_EQ(expected_billion_times_billion, billion_times_billion);
+}
 
+TEST(multiplication, long_numbers_2) {
     BigInteger positive_max = BigInteger::value_of(999999999);
-    vector<int> positive_max_square_vector;
-    positive_max_square_vector.push_back(1);
-    positive_max_square_vector.push_back(999999998);
-    BigInteger positive_max_square(positive_max_square_vector, 1);
+    BigInteger positive_max_square("999999998000000001");
     BigInteger expected_positive_max_square = positive_max * positive_max;
     ASSERT_EQ(expected_positive_max_square, positive_max_square);
+}
 
+TEST(multiplication, long_numbers_3) {
     BigInteger two = BigInteger::value_of(2);
     BigInteger power_of_two = BigInteger::value_of(1);
     int exponent = 100;
     for (int i = 0; i < exponent; i++) {
         power_of_two = power_of_two * two;
     }
-    cout << power_of_two << endl;
     vector<int> expected_power_of_two_vector;
-    expected_power_of_two_vector.push_back(703205376);
-    expected_power_of_two_vector.push_back(229401496);
-    expected_power_of_two_vector.push_back(650600228);
-    expected_power_of_two_vector.push_back(1267);
-    BigInteger expected_power_of_two(expected_power_of_two_vector, 1);
+    BigInteger expected_power_of_two("1267650600228229401496703205376");
     ASSERT_EQ(expected_power_of_two, power_of_two);
 }
 
-TEST(multiplication, long_numbers_2) {
-    vector<int> multiplier_1_vector;
-    multiplier_1_vector.push_back(907983710);
-    multiplier_1_vector.push_back(331);
-    BigInteger multiplier_1 = BigInteger(multiplier_1_vector, 1);
-
-    vector<int> multiplier_2_vector;
-    multiplier_2_vector.push_back(0);
-    multiplier_2_vector.push_back(100);
-    BigInteger multiplier_2 = BigInteger(multiplier_2_vector, 1);
-
-    vector<int> product_vector;
-    product_vector.push_back(0);
-    product_vector.push_back(798371000);
-    product_vector.push_back(33190);
-    BigInteger product = BigInteger(product_vector, 1);
-
+TEST(multiplication, long_numbers_4) {
+    BigInteger multiplier_1 = BigInteger("331907983710");
+    BigInteger multiplier_2 = BigInteger("100000000000");
+    BigInteger product = BigInteger("33190798371000000000000");
     ASSERT_EQ(multiplier_1 * multiplier_2, product);
 }

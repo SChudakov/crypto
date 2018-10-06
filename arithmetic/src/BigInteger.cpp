@@ -5,6 +5,45 @@
 #include "BigInteger.h"
 
 const BigInteger BigInteger::ZERO = BigInteger();
+const BigInteger BigInteger::ONE = BigInteger::value_of(1);
+
+
+BigInteger::BigInteger() {
+    this->number = vector<int>();
+    this->number.push_back(0);
+    this->signum = 0;
+}
+
+BigInteger::BigInteger(const vector<int> &number, int signum) : number(number), signum(signum) {}
+
+BigInteger::BigInteger(const string &s) {
+    vector<int> parsed_number;
+    int parsed_signum = 1;
+    if (s[0] == '-') {
+        parsed_number = to_vector(s.substr(1));
+        parsed_signum = -1;
+    } else {
+        parsed_number = to_vector(s);
+        signum = 1;
+        if (parsed_number.size() == 1 && parsed_number[0] == 0) {
+            signum = 0;
+        }
+    }
+    number = parsed_number;
+    signum = parsed_signum;
+}
+
+vector<int> BigInteger::to_vector(const string &s) {
+    vector<int> result;
+    int j = s.size();
+    while (j > 0) {
+        int i = j - 9 >= 0 ? j - 9 : 0;
+        result.push_back(stoi(s.substr((unsigned int) (i), (unsigned int) (j - i))));
+        j = i;
+    }
+    return result;
+}
+
 
 BigInteger operator+(const BigInteger &first, const BigInteger &second) {
     if (first.signum == 0) {
@@ -156,7 +195,8 @@ BigInteger operator/(const BigInteger &first, const BigInteger &second) {
                       first.signum == second.signum ? 1 : -1);
 }
 
-pair<vector<int>, vector<int>> BigInteger::quotient_and_remainder(const vector<int> &first, const vector<int> &second) {
+pair<vector<int>, vector<int>>
+BigInteger::quotient_and_remainder(const vector<int> &first, const vector<int> &second) {
     pair<vector<int>, vector<int>> result;
     if (second.size() == 1) {
         return short_division(first, second[0]);
@@ -211,18 +251,8 @@ pair<vector<int>, vector<int>> BigInteger::long_division(const vector<int> &divi
             remainder_decade_pointer -= 1;
         }
     }
-    vector<int> quotient;
-    int j = quotient_digits.size();
-//    cout << quotient_digits << endl;
-    while (j > 0) {
-        int i = j - 9 >= 0 ? j - 9 : 0;
-//        cout << i << " " << j << endl;
-//        cout << quotient_digits.substr((unsigned int) (i), (unsigned int) (j - i)) << endl;
-        quotient.push_back(stoi(quotient_digits.substr((unsigned int) (i), (unsigned int) (j - i))));
-        j = i;
-    }
     normalize(remainder);
-    return {quotient, remainder};
+    return {to_vector(quotient_digits), remainder};
 }
 
 
@@ -396,6 +426,45 @@ bool operator==(const BigInteger &left, const BigInteger &right) {
     return BigInteger::compare(left.number, right.number) == 0;
 }
 
+int BigInteger::compare(const vector<int> &first, const vector<int> &second) {
+    int i = first.size() - 1;
+    int j = second.size() - 1;
+    while (first[i] == 0) {
+        i--;
+    }
+    while (second[j] == 0) {
+        j--;
+    }
+    if (i < 0 && j < 0) {
+        return 0;
+    } else {
+        if (i < 0) {
+            return -1;
+        }
+        if (j < 0) {
+            return 1;
+        }
+    }
+
+    if (i != j) {
+        if (i > j) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+    for (; i >= 0; i--) {
+        if (first[i] != second[i]) {
+            break;
+        }
+    }
+    if (i < 0) {
+        return 0;
+    } else {
+        return first[i] > second[i] ? 1 : -1;
+    }
+}
+
 
 ostream &operator<<(ostream &stream, const BigInteger &number) {
     if (number.signum == -1) {
@@ -540,6 +609,7 @@ BigInteger BigInteger::root_quotient(const BigInteger &modulo) const {
     return this->square_root() % modulo;
 }
 
+
 BigInteger BigInteger::negate() const {
     return BigInteger(number, -signum);
 }
@@ -567,13 +637,71 @@ BigInteger BigInteger::value_of(const long long number) {
     return BigInteger(result_number, result_signum);
 }
 
-BigInteger::BigInteger() {
-    this->number = vector<int>();
-    this->number.push_back(0);
-    this->signum = 0;
+
+BigInteger BigInteger::chinese_remainder_problem(vector<pair<int, int>> &modulus_remainders) {
+    assert_pairwise_co_prime(modulus_remainders);
+
+    vector<BigInteger> modulus_values;
+    vector<BigInteger> remainders_values;
+    for (auto &modulus_remainder : modulus_remainders) {
+        modulus_values.push_back(BigInteger::value_of(modulus_remainder.first));
+        remainders_values.push_back(BigInteger::value_of(modulus_remainder.second));
+    }
+
+    BigInteger modulus_product = BigInteger::value_of(1);
+    for (const auto &modulus_value : modulus_values) {
+        modulus_product = modulus_product * modulus_value;
+    }
+    BigInteger sum = BigInteger::ZERO;
+    for (int i = 0; i < modulus_values.size(); i++) {
+        BigInteger mi_coefficient = modulus_product / modulus_values[i];
+        sum = sum + remainders_values[i] * inverse(mi_coefficient, modulus_values[i]) * mi_coefficient;
+    }
+
+    return sum % modulus_product;
 }
 
-BigInteger::BigInteger(const vector<int> &number, int signum) : number(number), signum(signum) {}
+BigInteger BigInteger::inverse(BigInteger a, BigInteger b) {
+    BigInteger b0 = b;
+    BigInteger t;
+    BigInteger q;
+    BigInteger x0 = ZERO;
+    BigInteger x1 = ONE;
+    if (b == ONE) {
+        return ONE;
+    }
+    while (a > ONE) {
+        q = a / b;
+
+        t = b;
+        b = a % b;
+        a = t;
+
+        t = x0;
+        x0 = x1 - q * x0;
+        x1 = t;
+    }
+    if (x1 < ZERO) {
+        x1 = x1 + b0;
+    }
+    return x1;
+}
+
+void BigInteger::assert_pairwise_co_prime(const vector<pair<int, int>> &modulus_remainders) {
+    for (int i = 0; i < modulus_remainders.size(); i++) {
+        for (int j = 0; j < i; j++) {
+            if (gcd(modulus_remainders[i].first, modulus_remainders[j].first) != 1) {
+                throw invalid_argument(
+                        to_string(modulus_remainders[i].first) + " and " + to_string(modulus_remainders[j].first) +
+                        " are not co-prime");
+            }
+        }
+    }
+}
+
+int BigInteger::gcd(int a, int b) {
+    return b == 0 ? a : gcd(b, a % b);
+}
 
 pair<int, int> BigInteger::numbers_and_decade(int decade_position) {
     if (decade_position % 9 == 0) {
@@ -585,43 +713,4 @@ pair<int, int> BigInteger::numbers_and_decade(int decade_position) {
 
 pair<int, int> BigInteger::quotient_and_remainder_by_base(long long number) {
     return {static_cast<const int &>(number / BigInteger::BASE), static_cast<const int &>(number % BigInteger::BASE)};
-}
-
-int BigInteger::compare(const vector<int> &first, const vector<int> &second) {
-    int i = first.size() - 1;
-    int j = second.size() - 1;
-    while (first[i] == 0) {
-        i--;
-    }
-    while (second[j] == 0) {
-        j--;
-    }
-    if (i < 0 && j < 0) {
-        return 0;
-    } else {
-        if (i < 0) {
-            return -1;
-        }
-        if (j < 0) {
-            return 1;
-        }
-    }
-
-    if (i != j) {
-        if (i > j) {
-            return 1;
-        } else {
-            return -1;
-        }
-    }
-    for (; i >= 0; i--) {
-        if (first[i] != second[i]) {
-            break;
-        }
-    }
-    if (i < 0) {
-        return 0;
-    } else {
-        return first[i] > second[i] ? 1 : -1;
-    }
 }
