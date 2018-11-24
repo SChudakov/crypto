@@ -1,8 +1,8 @@
 //
 // Created by Semen on 9/20/2018.
 //
-#include "gtest/gtest.h"
-#include "BigInteger.h"
+#include <BigInteger.h>
+#include <gtest/gtest.h>
 
 TEST(modulo, zero_one_minus_one) {
     BigInteger one = BigInteger::value_of(1);
@@ -10,7 +10,6 @@ TEST(modulo, zero_one_minus_one) {
 
     BigInteger ten = BigInteger::value_of(10);
     BigInteger minus_ten = BigInteger::value_of(-10);
-    BigInteger expected = minus_ten % one;
     ASSERT_EQ(ten % one, zero);
     ASSERT_EQ(minus_ten % one, zero);
 }
@@ -57,4 +56,49 @@ TEST(modulo, invald_modulo_base) {
 
     EXPECT_THROW(ten % zero, std::overflow_error);
     EXPECT_THROW(ten % minus_five, std::overflow_error);
+}
+
+TEST(modulo, division_test_1) {
+    BigInteger divident("92763193484361");
+    BigInteger divisor("200000000000");
+    BigInteger remainder("163193484361");
+
+    ASSERT_EQ(divident % divisor, remainder);
+}
+TEST(modulo, division_test_2) {
+    BigInteger divident("92763193484361913481346");
+    BigInteger divisor("331907983710");
+    BigInteger remainder("274900936326");
+
+    ASSERT_EQ(divident % divisor, remainder);
+}
+TEST(modulo, division_test_3) {
+    BigInteger divident("92763193484361913481346");
+    BigInteger divisor("305696327136");
+    BigInteger remainder("82527378018");
+
+    ASSERT_EQ(divident % divisor, remainder);
+}
+
+TEST(modulo, gcd_modulo_1) {
+    BigInteger divident("1611623773");
+    BigInteger divisor("945636286");
+    BigInteger remainder("665987487");
+
+    ASSERT_EQ(divident % divisor, remainder);
+}
+
+TEST(modulo, gcd_modulo_2) {
+    BigInteger divident("1611623773");
+    BigInteger divisor("1913713685");
+    BigInteger remainder("1611623773");
+
+    ASSERT_EQ(divident % divisor, remainder);
+}
+TEST(modulo, gcd_modulo_3) {
+    BigInteger divident("100000000000000000000000000001313711692");
+    BigInteger divisor("1611623773");
+    BigInteger remainder("1464442218");
+
+    ASSERT_EQ(divident % divisor, remainder);
 }

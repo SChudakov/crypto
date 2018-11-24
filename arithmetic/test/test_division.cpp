@@ -1,9 +1,8 @@
 //
 // Created by Semen on 9/16/2018.
 //
-#include "gtest/gtest.h"
-#include "BigInteger.h"
-
+#include <BigInteger.h>
+#include <gtest/gtest.h>
 
 TEST(division, zero_division) {
 
@@ -88,5 +87,19 @@ TEST(division, long_numbers_7) {
     BigInteger divident = BigInteger("92763193484361913481346");
     BigInteger divisor = BigInteger("305696327136");
     BigInteger quotient = BigInteger("303448832223");
+    ASSERT_EQ(divident / divisor, quotient);
+}
+
+TEST(division, gcd_division_1) {
+    BigInteger divident = BigInteger("1611623773");
+    BigInteger divisor = BigInteger("945636286");
+    BigInteger quotient = BigInteger("1");
+    ASSERT_EQ(divident / divisor, quotient);
+}
+
+TEST(division, factorization_1) {
+    BigInteger divident = BigInteger("10967535067");
+    BigInteger divisor = BigInteger("104723");
+    BigInteger quotient = BigInteger("104729");
     ASSERT_EQ(divident / divisor, quotient);
 }

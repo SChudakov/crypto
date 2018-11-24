@@ -1,8 +1,8 @@
 //
 // Created by Semen on 9/21/2018.
 //
-#include "gtest/gtest.h"
-#include "BigInteger.h"
+#include <BigInteger.h>
+#include <gtest/gtest.h>
 
 
 TEST(square_root, negative_number) {
@@ -21,7 +21,7 @@ TEST(square_root, short_numbers) {
     BigInteger hundred_twenty_two = BigInteger::value_of(122);
     BigInteger eleven = BigInteger::value_of(11);
 
-
+    BigInteger tmp = one.square_root();
     ASSERT_EQ(one.square_root(), one);
     ASSERT_EQ(ten.square_root(), three);
     ASSERT_EQ(hundred_twenty_two.square_root(), eleven);

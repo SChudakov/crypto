@@ -5,7 +5,6 @@
 #include "BigInteger.h"
 
 const BigInteger BigInteger::ZERO = BigInteger();
-const BigInteger BigInteger::ONE = BigInteger::value_of(1);
 
 
 BigInteger::BigInteger() {
@@ -45,58 +44,85 @@ vector<int> BigInteger::to_vector(const string &s) {
 }
 
 
-BigInteger operator+(const BigInteger &first, const BigInteger &second) {
-    if (first.signum == 0) {
-        return second;
+BigInteger operator++(BigInteger &a) {
+    return a = a + 1;
+}
+
+
+BigInteger operator+(const BigInteger &left, const BigInteger &right) {
+    if (left.signum == 0) {
+        return right;
     }
-    if (second.signum == 0) {
-        return first;
+    if (right.signum == 0) {
+        return left;
     }
-    if (first.signum == second.signum) {
-        return BigInteger(BigInteger::add(first.number, second.number), first.signum);
+    if (left.signum == right.signum) {
+        return BigInteger(BigInteger::add(left.number, right.number), left.signum);
     }
 
-    int compared = BigInteger::compare(first.number, second.number);
+    int compared = BigInteger::compare(left.number, right.number);
     if (compared == 0) {
         return BigInteger::ZERO;
     }
     vector<int> result_number;
     int result_signum = 0;
     if (compared > 0) {
-        result_number = BigInteger::subtract(first.number, second.number);
-        result_signum = first.signum;
+        result_number = BigInteger::subtract(left.number, right.number);
+        result_signum = left.signum;
     } else {
-        result_number = BigInteger::subtract(second.number, first.number);
-        result_signum = second.signum;
+        result_number = BigInteger::subtract(right.number, left.number);
+        result_signum = right.signum;
     }
     return BigInteger(result_number, result_signum);
 }
 
-BigInteger operator-(const BigInteger &first, const BigInteger &second) {
-    if (first.signum == 0) {
-        return second.negate();
+BigInteger operator+(const BigInteger &left, long long right) {
+    return left + BigInteger::value_of(right);
+}
+
+BigInteger operator+(long long left, const BigInteger &right) {
+    return right + left;
+}
+
+
+BigInteger operator-(const BigInteger &a) {
+    return a.negate();
+}
+
+
+BigInteger operator-(const BigInteger &left, const BigInteger &right) {
+    if (left.signum == 0) {
+        return right.negate();
     }
-    if (second.signum == 0) {
-        return first;
+    if (right.signum == 0) {
+        return left;
     }
-    if (first.signum != second.signum) {
-        return BigInteger(BigInteger::add(first.number, second.number), first.signum);
+    if (left.signum != right.signum) {
+        return BigInteger(BigInteger::add(left.number, right.number), left.signum);
     }
 
-    int compared = BigInteger::compare(first.number, second.number);
+    int compared = BigInteger::compare(left.number, right.number);
     if (compared == 0) {
         return BigInteger::ZERO;
     }
     vector<int> result_number;
     int result_signum = 0;
     if (compared > 0) {
-        result_number = BigInteger::subtract(first.number, second.number);
-        result_signum = first.signum == 1 ? 1 : -1;
+        result_number = BigInteger::subtract(left.number, right.number);
+        result_signum = left.signum == 1 ? 1 : -1;
     } else {
-        result_number = BigInteger::subtract(second.number, first.number);
-        result_signum = first.signum == 1 ? -1 : 1;
+        result_number = BigInteger::subtract(right.number, left.number);
+        result_signum = left.signum == 1 ? -1 : 1;
     }
     return BigInteger(result_number, result_signum);
+}
+
+BigInteger operator-(const BigInteger &left, long long right) {
+    return left - BigInteger::value_of(right);
+}
+
+BigInteger operator-(long long left, const BigInteger &right) {
+    return right - left;
 }
 
 vector<int> BigInteger::add(const vector<int> &first, const vector<int> &second) {
@@ -123,7 +149,7 @@ vector<int> BigInteger::add(const vector<int> &first, const vector<int> &second)
         carry = quotient_and_remainder_by_base.first;
     }
     if (quotient_and_remainder_by_base.first != 0) {
-        result.push_back(quotient_and_remainder_by_base.second);
+        result.push_back(quotient_and_remainder_by_base.first);
     }
     normalize(result);
     return result;
@@ -147,6 +173,9 @@ void BigInteger::mutating_subtract_with_no_normalization(vector<int> &first, con
             carry = 0;
         }
     }
+    if (carry != 0) {
+        first[second.size()] -= carry;
+    }
 }
 
 void BigInteger::normalize(vector<int> &number) {
@@ -155,11 +184,19 @@ void BigInteger::normalize(vector<int> &number) {
     }
 }
 
-BigInteger operator*(const BigInteger &first, const BigInteger &second) {
-    if (first.signum == 0 || second.signum == 0) {
+BigInteger operator*(const BigInteger &left, const BigInteger &right) {
+    if (left.signum == 0 || right.signum == 0) {
         return BigInteger::ZERO;
     }
-    return BigInteger(BigInteger::multiply(first.number, second.number), first.signum == second.signum ? 1 : -1);
+    return BigInteger(BigInteger::multiply(left.number, right.number), left.signum == right.signum ? 1 : -1);
+}
+
+BigInteger operator*(const BigInteger &left, long long right) {
+    return left * BigInteger::value_of(right);
+}
+
+BigInteger operator*(long long left, const BigInteger &right) {
+    return right * left;
 }
 
 vector<int> BigInteger::multiply(const vector<int> &first, const vector<int> &second) {
@@ -184,15 +221,23 @@ vector<int> BigInteger::multiply(const vector<int> &first, const vector<int> &se
     return result;
 }
 
-BigInteger operator/(const BigInteger &first, const BigInteger &second) {
-    if (second == BigInteger::ZERO) {
+BigInteger operator/(const BigInteger &left, const BigInteger &right) {
+    if (right == BigInteger::ZERO) {
         throw overflow_error("Division by zero");
     }
-    if (BigInteger::compare(first.number, second.number) < 0) {
+    if (BigInteger::compare(left.number, right.number) < 0) {
         return BigInteger::ZERO;
     }
-    return BigInteger(BigInteger::quotient_and_remainder(first.number, second.number).first,
-                      first.signum == second.signum ? 1 : -1);
+    return BigInteger(BigInteger::quotient_and_remainder(left.number, right.number).first,
+                      left.signum == right.signum ? 1 : -1);
+}
+
+BigInteger operator/(const BigInteger &left, long long right) {
+    return left / BigInteger::value_of(right);
+}
+
+BigInteger operator/(long long left, const BigInteger &right) {
+    return right / left;
 }
 
 pair<vector<int>, vector<int>>
@@ -217,10 +262,15 @@ BigInteger::short_division(const vector<int> &divident, const int divisor) {
     }
     reverse(quotient.begin(), quotient.end());
     remainder.push_back(carry);
+    normalize(quotient);
+    normalize(remainder);
     return {quotient, remainder};
 }
 
 pair<vector<int>, vector<int>> BigInteger::long_division(const vector<int> &divident, const vector<int> &divisor) {
+    if (BigInteger::compare(divident, divisor) < 0) {
+        return {{0}, divident};
+    }
     string quotient_digits;
     vector<int> remainder(divident);
 
@@ -356,7 +406,7 @@ int BigInteger::decade_value(const int number, const int decade_position) {
 }
 
 int BigInteger::non_zero_decades(const vector<int> &number) {
-    return (number.size() - 1) * 9 + non_zero_decades(number[number.size() - 1]);
+    return static_cast<int>((number.size() - 1) * 9 + non_zero_decades(number[number.size() - 1]));
 }
 
 int BigInteger::non_zero_decades(const int number) {
@@ -369,18 +419,42 @@ int BigInteger::non_zero_decades(const int number) {
     return result;
 }
 
-BigInteger operator%(const BigInteger &first, const BigInteger &second) {
-    if (second.signum == -1 || second.signum == 0) {
+
+BigInteger operator%(const BigInteger &left, const BigInteger &right) {
+    if (right.signum == -1 || right.signum == 0) {
         throw overflow_error("Modulo base should be a positive number");
     }
-    if (first.signum == 0) {
+    if (left.signum == 0 || left == right) {
         return BigInteger::ZERO;
     }
+    if (BigInteger::compare(left.number, right.number) < 0) {
+        if (left.signum == 1) {
+            return left;
+        }
+        if (left.signum == -1) {
+            return BigInteger(BigInteger::subtract(right.number, left.number), 1);
+        }
+    }
     vector<int> remainder = BigInteger::quotient_and_remainder(
-            BigInteger::add(BigInteger::quotient_and_remainder(
-                    first.number, second.number).second, second.number), second.number).second;
-    return BigInteger(remainder, (remainder.size() == 1 && remainder[0] == 0) ? 0 : 1);
+            BigInteger::add(BigInteger::quotient_and_remainder(left.number, right.number).second, right.number),
+            right.number).second;
+    int sg = 1;
+    if (remainder.size() == 1 && remainder[0] == 0) {
+        sg = 0;
+    }
+    return BigInteger(remainder, sg);
 }
+
+BigInteger operator%(const BigInteger &left, long long right) {
+    return left % BigInteger::value_of(right);
+}
+
+BigInteger operator%(long long left, const BigInteger &right) {
+    return BigInteger::value_of(left) % right;
+}
+
+
+BigInteger &BigInteger::operator=(const BigInteger &other) = default;
 
 
 bool operator<(const BigInteger &left, const BigInteger &right) {
@@ -401,6 +475,28 @@ bool operator<(const BigInteger &left, const BigInteger &right) {
     }
 }
 
+bool operator<(const BigInteger &left, long long right) {
+    return left < BigInteger::value_of(right);;
+}
+
+bool operator<(long long left, const BigInteger &right) {
+    return BigInteger::value_of(left) < right;
+}
+
+
+bool operator<=(const BigInteger &left, const BigInteger &right) {
+    return (left < right) || (left == right);
+}
+
+bool operator<=(const BigInteger &left, long long right) {
+    return left <= BigInteger::value_of(right);
+}
+
+bool operator<=(long long left, const BigInteger &right) {
+    return BigInteger::value_of(left) <= right;
+}
+
+
 bool operator>(const BigInteger &left, const BigInteger &right) {
     if (left.signum == 0) {
         return right.signum < 0;
@@ -419,6 +515,28 @@ bool operator>(const BigInteger &left, const BigInteger &right) {
     }
 }
 
+bool operator>(const BigInteger &left, long long right) {
+    return left > BigInteger::value_of(right);;
+}
+
+bool operator>(long long left, const BigInteger &right) {
+    return BigInteger::value_of(left) > right;
+}
+
+
+bool operator>=(const BigInteger &left, const BigInteger &right) {
+    return (left > right) || (left == right);
+}
+
+bool operator>=(const BigInteger &left, long long right) {
+    return left >= BigInteger::value_of(right);
+}
+
+bool operator>=(long long left, const BigInteger &right) {
+    return BigInteger::value_of(left) >= right;
+}
+
+
 bool operator==(const BigInteger &left, const BigInteger &right) {
     if (left.signum != right.signum) {
         return false;
@@ -426,9 +544,31 @@ bool operator==(const BigInteger &left, const BigInteger &right) {
     return BigInteger::compare(left.number, right.number) == 0;
 }
 
+bool operator==(const BigInteger &left, long long right) {
+    return left == BigInteger::value_of(right);;
+}
+
+bool operator==(long long left, const BigInteger &right) {
+    return right == left;
+}
+
+
+bool operator!=(const BigInteger &left, const BigInteger &right) {
+    return !(left == right);
+}
+
+bool operator!=(const BigInteger &left, const long long right) {
+    return left != BigInteger::value_of(right);;
+}
+
+bool operator!=(long long left, const BigInteger &right) {
+    return right != left;
+}
+
+
 int BigInteger::compare(const vector<int> &first, const vector<int> &second) {
-    int i = first.size() - 1;
-    int j = second.size() - 1;
+    int i = static_cast<int>(first.size() - 1);
+    int j = static_cast<int>(second.size() - 1);
     while (first[i] == 0) {
         i--;
     }
@@ -467,19 +607,31 @@ int BigInteger::compare(const vector<int> &first, const vector<int> &second) {
 
 
 ostream &operator<<(ostream &stream, const BigInteger &number) {
-    if (number.signum == -1) {
+    stream << number.to_string();
+    return stream;
+}
+
+string BigInteger::to_string() const {
+    stringstream stream;
+    if (signum == -1) {
         stream << "-";
     }
-    int i = 1;
-    for (auto rit = number.number.rbegin(); rit != number.number.rend(); ++rit) {
-        if (i == 1) {
-            stream << *rit;
-        } else {
-            stream << BigInteger::to_string(*rit);
+    if (number.size() == 1 && number[0] == 0) {
+        stream << "0";
+    } else {
+        int i = 1;
+        for (auto rit = number.rbegin(); rit != number.rend(); ++rit) {
+            if (i == 1) {
+                if (*rit != 0) {
+                    stream << *rit;
+                }
+            } else {
+                stream << BigInteger::to_string(*rit);
+            }
+            i++;
         }
-        i++;
     }
-    return stream;
+    return stream.str();
 }
 
 string BigInteger::to_string(int number) {
@@ -493,25 +645,66 @@ string BigInteger::to_string(int number) {
 }
 
 
-BigInteger BigInteger::to_power(unsigned int power) const {
-    if (signum == 0 && power == 0) {
-        throw invalid_argument("Indeterminateness of type 0 to power of 0");
-    }
-    if (signum == 0 || (signum == 1 && number.size() == 1 && number[0] == 1)) {
-        return *this;
-    }
-    bool even_power = !(power & 1);
+BigInteger BigInteger::to_power(const BigInteger &power) const {
+    BigInteger::assert_legal_power(*this, power);
+
+    BigInteger power_copy = power;
+    bool even_power = !(power_copy % 2 == 1);
     vector<int> result;
     result.push_back(1);
     vector<int> copy(number);
-    while (power) {
-        if (power & 1)
+    while (power_copy > 0) {
+        if (power_copy % 2 == 1) {
             result = multiply(result, copy);
+        }
         copy = multiply(copy, copy);
-        power >>= 1;
+        power_copy = power_copy / 2;
     }
     return BigInteger(result, (signum == -1 && !even_power) ? -1 : 1);
 }
+
+BigInteger BigInteger::to_power(unsigned long long power) const {
+    return to_power(BigInteger::value_of(power));
+}
+
+BigInteger BigInteger::to_power(const BigInteger &power, const BigInteger &mod) const {
+    BigInteger::assert_legal_power(*this, power);
+    BigInteger::assert_legal_mod(mod);
+
+    BigInteger power_copy = power;
+    bool even_power = !(power_copy % 2 == 1);
+    vector<int> result;
+    result.push_back(1);
+    vector<int> copy(number);
+    while (power_copy > 0) {
+        if (power_copy % 2 == 1) {
+            result = quotient_and_remainder(multiply(result, copy), mod.number).second;
+        }
+        copy = quotient_and_remainder(multiply(copy, copy), mod.number).second;
+        power_copy = power_copy / 2;
+    }
+    return BigInteger(result, (signum == -1 && !even_power) ? -1 : 1);
+}
+
+BigInteger BigInteger::to_power(unsigned long long power, const BigInteger &mod) const {
+    return to_power(BigInteger::value_of(power), mod);
+}
+
+void BigInteger::assert_legal_power(const BigInteger &number, const BigInteger &power) {
+    if (number.signum == 0 && power == 0) {
+        throw invalid_argument("Indeterminateness of type 0 to power of 0");
+    }
+    if (power.signum == -1) {
+        throw invalid_argument("Power cannot be negative");
+    }
+}
+
+void BigInteger::assert_legal_mod(const BigInteger &mod) {
+    if (mod < 2) {
+        throw invalid_argument("Mod cannot be less than 2");
+    }
+}
+
 
 BigInteger BigInteger::square_root() const {
     if (signum == -1) {
@@ -529,7 +722,7 @@ BigInteger BigInteger::square_root() const {
 
 vector<int> BigInteger::short_square_root(vector<int> number) {
     vector<int> result;
-    result.push_back(static_cast<int &&>(sqrt(number[0])));
+    result.push_back(static_cast<int>(sqrt(number[0])));
     return result;
 }
 
@@ -573,10 +766,6 @@ vector<int> BigInteger::square_root_initial_approximation(const vector<int> numb
 
 vector<int> BigInteger::square_root_next_approximation(const vector<int> &number, const vector<int> &approximation,
                                                        const vector<int> two) {
-//    vector<int> first_quotient = quotient_and_remainder(number, approximation).first;
-//    vector<int> sum = add(approximation, quotient_and_remainder(number, approximation).first);
-//    vector<int> second_quotient = quotient_and_remainder(
-//            add(approximation, quotient_and_remainder(number, approximation).first), two).first;
     return quotient_and_remainder(add(approximation, quotient_and_remainder(number, approximation).first), two).first;
 }
 
@@ -585,28 +774,64 @@ BigInteger BigInteger::modulo_addition(const BigInteger &other, const BigInteger
     return (*this + other) % modulo;
 }
 
-BigInteger BigInteger::modulo_subtractions(const BigInteger &other, const BigInteger &modulo) const {
+BigInteger BigInteger::modulo_addition(const BigInteger &other, long long modulo) const {
+    return (*this + other) % modulo;
+}
+
+BigInteger BigInteger::modulo_addition(long long other, const BigInteger &modulo) const {
+    return (*this + other) % modulo;
+}
+
+
+BigInteger BigInteger::modulo_subtraction(const BigInteger &other, const BigInteger &modulo) const {
     return (*this - other) % modulo;
 }
+
+BigInteger BigInteger::modulo_subtraction(long long other, const BigInteger &modulo) const {
+    return (*this - other) % modulo;
+}
+
+BigInteger BigInteger::modulo_subtraction(const BigInteger &other, long long modulo) const {
+    return (*this - other) % modulo;
+}
+
 
 BigInteger BigInteger::modulo_multiplication(const BigInteger &other, const BigInteger &modulo) const {
     return (*this * other) % modulo;
 }
 
+BigInteger BigInteger::modulo_multiplication(long long other, const BigInteger &modulo) const {
+    return (*this * other) % modulo;
+}
+
+BigInteger BigInteger::modulo_multiplication(const BigInteger &other, long long modulo) const {
+    return (*this * other) % modulo;
+}
+
+
 BigInteger BigInteger::modulo_division(const BigInteger &other, const BigInteger &modulo) const {
     return (*this / other) % modulo;
 }
 
-BigInteger BigInteger::modulo_remainder(const BigInteger &other, const BigInteger &modulo) const {
-    return (*this % other) % modulo;
+BigInteger BigInteger::modulo_division(long long other, const BigInteger &modulo) const {
+    return (*this / other) % modulo;
 }
 
-BigInteger BigInteger::modulo_to_power(const unsigned int power, const BigInteger &modulo) const {
-    return (this->to_power(power) % modulo);
+BigInteger BigInteger::modulo_division(const BigInteger &other, long long modulo) const {
+    return (*this / other) % modulo;
 }
 
-BigInteger BigInteger::root_quotient(const BigInteger &modulo) const {
-    return this->square_root() % modulo;
+
+pair<int, int> BigInteger::numbers_and_decade(int decade_position) {
+    if (decade_position % 9 == 0) {
+        return {decade_position / 9 - 1, 9};
+    } else {
+        return {decade_position / 9, decade_position % 9};
+    }
+}
+
+pair<int, int> BigInteger::quotient_and_remainder_by_base(long long number) {
+    return {static_cast<const int &>(number / BigInteger::BASE), static_cast<const int &>(number % BigInteger::BASE)};
 }
 
 
@@ -637,80 +862,28 @@ BigInteger BigInteger::value_of(const long long number) {
     return BigInteger(result_number, result_signum);
 }
 
-
-BigInteger BigInteger::chinese_remainder_problem(vector<pair<int, int>> &modulus_remainders) {
-    assert_pairwise_co_prime(modulus_remainders);
-
-    vector<BigInteger> modulus_values;
-    vector<BigInteger> remainders_values;
-    for (auto &modulus_remainder : modulus_remainders) {
-        modulus_values.push_back(BigInteger::value_of(modulus_remainder.first));
-        remainders_values.push_back(BigInteger::value_of(modulus_remainder.second));
-    }
-
-    BigInteger modulus_product = BigInteger::value_of(1);
-    for (const auto &modulus_value : modulus_values) {
-        modulus_product = modulus_product * modulus_value;
-    }
-    BigInteger sum = BigInteger::ZERO;
-    for (int i = 0; i < modulus_values.size(); i++) {
-        BigInteger mi_coefficient = modulus_product / modulus_values[i];
-        sum = sum + remainders_values[i] * inverse(mi_coefficient, modulus_values[i]) * mi_coefficient;
-    }
-
-    return sum % modulus_product;
+BigInteger BigInteger::abs() const {
+    return BigInteger(number, signum * signum);
 }
 
-BigInteger BigInteger::inverse(BigInteger a, BigInteger b) {
-    BigInteger b0 = b;
-    BigInteger t;
-    BigInteger q;
-    BigInteger x0 = ZERO;
-    BigInteger x1 = ONE;
-    if (b == ONE) {
-        return ONE;
-    }
-    while (a > ONE) {
-        q = a / b;
 
-        t = b;
-        b = a % b;
-        a = t;
+BigInteger BigInteger::random(const BigInteger &mod) {
+    BigInteger::assert_legal_mod(mod);
 
-        t = x0;
-        x0 = x1 - q * x0;
-        x1 = t;
+    vector<int> number;
+    number.reserve(mod.number.size());
+
+    for (uint32_t i = 0; i < mod.number.size() - 1; i++) {
+        number.push_back(rand() % BASE);
     }
-    if (x1 < ZERO) {
-        x1 = x1 + b0;
-    }
-    return x1;
+    number.push_back(rand() % mod.number[mod.number.size() - 1]);
+    return BigInteger(number, 1);
 }
 
-void BigInteger::assert_pairwise_co_prime(const vector<pair<int, int>> &modulus_remainders) {
-    for (int i = 0; i < modulus_remainders.size(); i++) {
-        for (int j = 0; j < i; j++) {
-            if (gcd(modulus_remainders[i].first, modulus_remainders[j].first) != 1) {
-                throw invalid_argument(
-                        to_string(modulus_remainders[i].first) + " and " + to_string(modulus_remainders[j].first) +
-                        " are not co-prime");
-            }
-        }
-    }
+int BigInteger::operator[](int idx) const {
+    return number[idx];
 }
 
-int BigInteger::gcd(int a, int b) {
-    return b == 0 ? a : gcd(b, a % b);
-}
-
-pair<int, int> BigInteger::numbers_and_decade(int decade_position) {
-    if (decade_position % 9 == 0) {
-        return {decade_position / 9 - 1, 9};
-    } else {
-        return {decade_position / 9, decade_position % 9};
-    }
-}
-
-pair<int, int> BigInteger::quotient_and_remainder_by_base(long long number) {
-    return {static_cast<const int &>(number / BigInteger::BASE), static_cast<const int &>(number % BigInteger::BASE)};
+uint64_t BigInteger::size() {
+    return number.size();
 }

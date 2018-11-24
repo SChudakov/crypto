@@ -1,8 +1,8 @@
 //
 // Created by Semen on 9/9/2018.
 //
-#include "gtest/gtest.h"
-#include "BigInteger.h"
+#include <BigInteger.h>
+#include <gtest/gtest.h>
 
 TEST(addition, zero_one_minus_one) {
     BigInteger zero = BigInteger::value_of(0);

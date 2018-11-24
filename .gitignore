@@ -1,6 +1,6 @@
 .idea/*
 cmake-build-debug/*
-arithmetic/test/lib/*
+lib/*
 
 # Prerequisites
 *.d

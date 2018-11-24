@@ -23,12 +23,9 @@ class BigInteger {
 private:
     static const int BASE = 1000 * 1000 * 1000;
     static const BigInteger ZERO;
-    static const BigInteger ONE;
 
     vector<int> number;
     int signum;
-
-    BigInteger();
 
     BigInteger(const vector<int> &number, int signum);
 
@@ -57,8 +54,8 @@ private:
                                   int divisor_decades, bool ctt);
 
     static pair<int, int>
-    digit_taken_digits(const vector<int> &divident, const vector<int> &divisor, const int divident_decade,
-                       const int divisor_decades, const bool ctt);
+    digit_taken_digits(const vector<int> &divident, const vector<int> &divisor, int divident_decade,
+                       int divisor_decades, bool ctt);
 
 
     static vector<int> vector_with_one_in_decade(int decade_position);
@@ -84,12 +81,9 @@ private:
     square_root_next_approximation(const vector<int> &number, const vector<int> &approximation, vector<int> two);
 
 
-    static void assert_pairwise_co_prime(const vector<pair<int, int>> &modulus_remainders);
+    static void assert_legal_power(const BigInteger &number, const BigInteger &power);
 
-    static int gcd(int a, int b);
-
-
-    static BigInteger inverse(BigInteger a, BigInteger b);
+    static void assert_legal_mod(const BigInteger &mod);
 
 
     static void normalize(vector<int> &number);
@@ -102,56 +96,149 @@ private:
 
     static vector<int> to_vector(const string &s);
 
+    BigInteger negate() const;
+
 public:
+    BigInteger();
+
     explicit BigInteger(const string &s);
 
 
-    friend BigInteger operator+(const BigInteger &first, const BigInteger &second);
+    friend BigInteger operator+(const BigInteger &left, const BigInteger &right);
 
-    friend BigInteger operator-(const BigInteger &first, const BigInteger &second);
+    friend BigInteger operator+(const BigInteger &left, long long right);
 
-    friend BigInteger operator*(const BigInteger &first, const BigInteger &second);
+    friend BigInteger operator+(long long left, const BigInteger &right);
 
-    friend BigInteger operator/(const BigInteger &first, const BigInteger &second);
 
-    friend BigInteger operator%(const BigInteger &first, const BigInteger &second);
+    friend BigInteger operator-(const BigInteger &a);
+
+
+    friend BigInteger operator-(const BigInteger &left, const BigInteger &right);
+
+    friend BigInteger operator-(const BigInteger &left, long long right);
+
+    friend BigInteger operator-(long long left, const BigInteger &right);
+
+
+    friend BigInteger operator*(const BigInteger &left, const BigInteger &right);
+
+    friend BigInteger operator*(const BigInteger &left, long long right);
+
+    friend BigInteger operator*(long long left, const BigInteger &right);
+
+
+    friend BigInteger operator/(const BigInteger &left, const BigInteger &right);
+
+    friend BigInteger operator/(const BigInteger &left, long long right);
+
+    friend BigInteger operator/(long long left, const BigInteger &right);
+
+
+    friend BigInteger operator%(const BigInteger &left, const BigInteger &right);
+
+    friend BigInteger operator%(const BigInteger &left, long long right);
+
+    friend BigInteger operator%(long long left, const BigInteger &right);
+
+
+    friend BigInteger operator++(BigInteger &a);
+
+    BigInteger &operator=(const BigInteger &other);
 
 
     friend bool operator<(const BigInteger &left, const BigInteger &right);
 
+    friend bool operator<(const BigInteger &left, long long right);
+
+    friend bool operator<(long long left, const BigInteger &right);
+
+
+    friend bool operator<=(const BigInteger &left, const BigInteger &right);
+
+    friend bool operator<=(const BigInteger &left, long long right);
+
+    friend bool operator<=(long long left, const BigInteger &right);
+
+
     friend bool operator>(const BigInteger &left, const BigInteger &right);
 
+    friend bool operator>(const BigInteger &left, long long right);
+
+    friend bool operator>(long long left, const BigInteger &right);
+
+
+    friend bool operator>=(const BigInteger &left, const BigInteger &right);
+
+    friend bool operator>=(const BigInteger &left, long long right);
+
+    friend bool operator>=(long long left, const BigInteger &right);
+
+
     friend bool operator==(const BigInteger &left, const BigInteger &right);
+
+    friend bool operator==(const BigInteger &left, long long right);
+
+    friend bool operator==(long long left, const BigInteger &right);
+
+
+    friend bool operator!=(const BigInteger &left, const BigInteger &right);
+
+    friend bool operator!=(const BigInteger &left, long long right);
+
+    friend bool operator!=(long long left, const BigInteger &right);
 
 
     friend ostream &operator<<(ostream &os, const BigInteger &dt);
 
 
-    BigInteger to_power(unsigned int power) const;
+    BigInteger to_power(const BigInteger &power) const;
+
+    BigInteger to_power(unsigned long long power) const;
+
+    BigInteger to_power(const BigInteger &power, const BigInteger &mod) const;
+
+    BigInteger to_power(unsigned long long power, const BigInteger &mod) const;
 
     BigInteger square_root() const;
 
 
     BigInteger modulo_addition(const BigInteger &other, const BigInteger &modulo) const;
 
-    BigInteger modulo_subtractions(const BigInteger &other, const BigInteger &modulo) const;
+    BigInteger modulo_addition(const BigInteger &other, long long modulo) const;
+
+    BigInteger modulo_addition(long long other, const BigInteger &modulo) const;
+
+    BigInteger modulo_subtraction(const BigInteger &other, const BigInteger &modulo) const;
+
+    BigInteger modulo_subtraction(long long other, const BigInteger &modulo) const;
+
+    BigInteger modulo_subtraction(const BigInteger &other, long long modulo) const;
 
     BigInteger modulo_multiplication(const BigInteger &other, const BigInteger &modulo) const;
 
+    BigInteger modulo_multiplication(long long other, const BigInteger &modulo) const;
+
+    BigInteger modulo_multiplication(const BigInteger &other, long long modulo) const;
+
     BigInteger modulo_division(const BigInteger &other, const BigInteger &modulo) const;
 
-    BigInteger modulo_remainder(const BigInteger &other, const BigInteger &modulo) const;
+    BigInteger modulo_division(long long other, const BigInteger &modulo) const;
 
-    BigInteger modulo_to_power(unsigned int power, const BigInteger &modulo) const;
-
-    BigInteger root_quotient(const BigInteger &modulo) const;
+    BigInteger modulo_division(const BigInteger &other, long long modulo) const;
 
 
-    BigInteger negate() const;
+    BigInteger abs() const;
 
     static BigInteger value_of(long long number);
 
-    static BigInteger chinese_remainder_problem(vector<pair<int, int>> &modulus_remainders);
+    string to_string() const;
+
+    static BigInteger random(const BigInteger &mod);
+
+    int operator[](int idx)const ;
+
+    uint64_t size();
 };
 
 

@@ -4,13 +4,14 @@
 #include <iostream>
 #include <BigInteger.h>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 string addition = "+";
-string subtraction = "-";
-string multiplication = "*";
-string division = "/";
+string minus = "-";
+string multiply = "*";
+string divide = "/";
 string modulo = "%";
 
 string to_power = "^";
@@ -74,7 +75,7 @@ void console() {
             vector<pair<int, int>> modulus_and_remainders = input_modulus_and_remainders();
             BigInteger number = BigInteger::chinese_remainder_problem(modulus_and_remainders);
             cout << number << endl;
-        }else{
+        } else {
             BigInteger first = input_number();
             BigInteger second = BigInteger::value_of(0);
             unsigned int power = 0;
@@ -83,15 +84,15 @@ void console() {
                 second = input_number();
                 cout << first + second << endl;
             }
-            if (operation == subtraction) {
+            if (operation == minus) {
                 second = input_number();
                 cout << first - second << endl;
             }
-            if (operation == multiplication) {
+            if (operation == multiply) {
                 second = input_number();
                 cout << first * second << endl;
             }
-            if (operation == division) {
+            if (operation == divide) {
                 second = input_number();
                 cout << first / second << endl;
             }
@@ -111,8 +112,7 @@ void console() {
 }
 
 int main() {
-    console();
-    system("pause");
+//    console();
+    cout << BigInteger::value_of(-12) % BigInteger::value_of(5) << endl;
     return 0;
 }
-
