@@ -2,7 +2,7 @@
 // Created by Semen on 11/3/2018.
 //
 
-#include "FloydsAlgorithm.h"
+#include "FloydAlgorithm.h"
 
 BigInteger FloydsAlgorithm::cycle_length(function<BigInteger(const BigInteger &, const BigInteger &)> func, BigInteger a0,
                                          const BigInteger &mod) {

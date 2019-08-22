@@ -6,7 +6,7 @@
 #define CRYPTO_POLLARDSRPOALGORITHM_H
 
 #include "GCD.h"
-#include "FloydsAlgorithm.h"
+#include "FloydAlgorithm.h"
 #include "CipollasAlgorithm.h"
 
 using namespace std;

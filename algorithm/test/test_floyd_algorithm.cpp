@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <BigInteger.h>
-#include <FloydsAlgorithm.h>
+#include <FloydAlgorithm.h>
 #include <functional>
 
 TEST(floyd, floyd_1) {

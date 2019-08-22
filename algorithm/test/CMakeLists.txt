@@ -14,7 +14,7 @@ add_executable(algorithm_test
         test_legendre_symbol.cpp
         test_solovay_strassen.cpp
         test_cipollas_algorithm.cpp
-        test_floyds_algorithm.cpp
+        test_floyd_algorithm.cpp
         test_chinese_remainder_problem.cpp
         test_el_gamal.cpp)
 

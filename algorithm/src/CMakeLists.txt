@@ -13,7 +13,7 @@ target_sources(algorithm
         LegendreSymbol.cpp
         CipollasAlgorithm.cpp
         UniformRandomGenerator.cpp
-        FloydsAlgorithm.cpp
+        FloydAlgorithm.cpp
         ChineseRemainderProblem.cpp
         EllipticCurve.cpp
         ElGamalCryptosystem.cpp
@@ -29,7 +29,7 @@ target_sources(algorithm
         ${CMAKE_CURRENT_LIST_DIR}/LegendreSymbol.h
         ${CMAKE_CURRENT_LIST_DIR}/CipollasAlgorithm.h
         ${CMAKE_CURRENT_LIST_DIR}/UniformRandomGenerator.h
-        ${CMAKE_CURRENT_LIST_DIR}/FloydsAlgorithm.h
+        ${CMAKE_CURRENT_LIST_DIR}/FloydAlgorithm.h
         ${CMAKE_CURRENT_LIST_DIR}/ChineseRemainderProblem.h
         ${CMAKE_CURRENT_LIST_DIR}/EllipticCurve.h
         ${CMAKE_CURRENT_LIST_DIR}/ElGamalCryptosystem.h
